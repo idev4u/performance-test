@@ -47,7 +47,7 @@ Requests/sec:   3176.78
 Transfer/sec:    428.12KB
 ```
 
-Local Laptop 
+Local Laptop
 ## GO vs. Swift
 swift
 ```
@@ -109,4 +109,4 @@ Running 30s test @ http://localhost:4567/test2
 Requests/sec:   2815.96
 Transfer/sec:    472.99KB
 ```
-go is 91,04% faster
+go handles 91,04% more requests
