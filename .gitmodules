@@ -4,3 +4,6 @@
 [submodule "compare/performance-test-ruby"]
 	path = compare/performance-test-ruby
 	url = git@github.com:idev4u/performance-test-ruby.git
+[submodule "compare/performance-test-go"]
+	path = compare/performance-test-go
+	url = git@github.com:idev4u/performance-test-go.git
