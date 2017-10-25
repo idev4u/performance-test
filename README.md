@@ -47,7 +47,7 @@ Requests/sec:   3176.78
 Transfer/sec:    428.12KB
 ```
 
-
+Local Laptop 
 ## GO vs. Swift
 swift
 ```
@@ -62,6 +62,26 @@ Running 30s test @ http://localhost:8080/test2
 Requests/sec:  10951.71
 Transfer/sec:      1.37MB
 ```
+
+release compile
+
+swift build -c release -Xswiftc -static-stdlib
+
+```
+normansmacbook:performance-test norman$  wrk -t20 -c400 -d30s http://localhost:8080/test2 -s post.lua
+Running 30s test @ http://localhost:8080/test2
+  20 threads and 400 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    27.62ms   53.91ms 661.40ms   97.53%
+    Req/Sec     0.95k   202.17     2.17k    87.93%
+  559486 requests in 30.09s, 69.90MB read
+  Socket errors: connect 0, read 324, write 0, timeout 0
+Requests/sec:  18592.11
+Transfer/sec:      2.32MB
+```
+
+go handles 40,84% more requests
+
 golang standard single thread
 ```
 bash$ wrk -t20 -c400 -d30s http://localhost:8082/test2 -s post.lua
@@ -75,3 +95,18 @@ Running 30s test @ http://localhost:8082/test2
 Requests/sec:  31451.52
 Transfer/sec:      3.87MB
 ```
+
+and finally ruby sinatra
+```
+bash$ wrk -t20 -c400 -d30s http://localhost:4567/test2 -s post.lua
+Running 30s test @ http://localhost:4567/test2
+  20 threads and 400 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.71ms    7.19ms 391.74ms   99.07%
+    Req/Sec     0.96k   530.44     1.75k    34.65%
+  84739 requests in 30.09s, 13.90MB read
+  Socket errors: connect 0, read 257, write 0, timeout 0
+Requests/sec:   2815.96
+Transfer/sec:    472.99KB
+```
+go is 91,04% faster
