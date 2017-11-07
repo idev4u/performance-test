@@ -37,7 +37,8 @@ endpoint.post("/test2") { (request, response, next)  in
     let result = payload.dictionary?["name"]
     print(result?.rawString() ?? "")
     
-    try response.send(status: HTTPStatusCode.OK ).end()
+//    try response.send(status: HTTPStatusCode.OK).end()
+    try response.send("Hello Swift World!").end()
     next()
 }
 

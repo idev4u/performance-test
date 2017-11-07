@@ -2,7 +2,6 @@
 
 A description of this package.
 
-
 Endpoint Call
 ```
 curl -iv -X POST http://localhost:8080/test -H "Content-Type: application/json" -d '{"name":"hello" }'
@@ -79,6 +78,7 @@ Running 30s test @ http://localhost:8080/test2
 Requests/sec:  18592.11
 Transfer/sec:      2.32MB
 ```
+4 instance double ca 1118972
 
 go handles 40,84% more requests
 
@@ -110,3 +110,16 @@ Requests/sec:   2815.96
 Transfer/sec:    472.99KB
 ```
 go handles 91,04% more requests
+
+
+perfomance on Cloud Foundry
+
+### before
+cf push performance-test -m 32M // swift app
+cd compare/performance-test-go cf push performance-test-go -m 256M // go app
+
+#go
+wrk -t20 -c400 -d30s https://performance-test-go.eu-de.mybluemix.net/test2 -s post.lua
+
+#swift
+wrk -t20 -c400 -d30s https://performance-test.eu-de.mybluemix.net/test2 -s post.lua
