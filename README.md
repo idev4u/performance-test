@@ -4,10 +4,10 @@ A description of this package.
 
 Endpoint Call
 ```
-curl -iv -X POST http://localhost:8080/test -H "Content-Type: application/json" -d '{"name":"hello" }'
+curl -iv -X POST http://localhost:8080/test2 -H "Content-Type: application/json" -d '{"name":"hello" }'
 ```
 
-complite example
+complete example
 ```
 bash$ echo `curl -X POST http://localhost:8080/test -H "Content-Type: application/json" -d '{"name":"hello" }' `
   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
@@ -16,39 +16,11 @@ bash$ echo `curl -X POST http://localhost:8080/test -H "Content-Type: applicatio
 Hello hello
 ```
 
-wrk -t2 -c40 -d30s http://localhost:8080/test -s post.lua
+wrk -t2 -c40 -d30s http://localhost:8080/test2 -s post.lua
 
-### //endpoint with Body parsing
-```
-bash$ wrk -t40 -c4000 -d30s http://localhost:8080/test2 -s post.lua
-Running 30s test @ http://localhost:8080/test2
-  40 threads and 4000 connections
-  Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   290.09ms  162.91ms 624.57ms   58.72%
-    Req/Sec   116.85     80.99     1.79k    90.44%
-  107254 requests in 30.10s, 13.40MB read
-  Socket errors: connect 0, read 2926, write 0, timeout 36
-Requests/sec:   3563.44
-Transfer/sec:    455.87KB
-```
-
-### // endpoint without body parsing
-```
-bash$ wrk -t40 -c4000 -d30s http://localhost:8080/test -s post.lua
-Running 30s test @ http://localhost:8080/test
-  40 threads and 4000 connections
-  Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   273.06ms  148.16ms   1.56s    55.15%
-    Req/Sec   112.07     35.73   445.00     72.87%
-  95591 requests in 30.09s, 12.58MB read
-  Socket errors: connect 0, read 2254, write 0, timeout 17
-Requests/sec:   3176.78
-Transfer/sec:    428.12KB
-```
-
-Local Laptop
-## GO vs. Swift
-swift
+## Local Laptop
+### GO vs. Swift
+swift kitura 1.7.9
 ```
 bash$ wrk -t20 -c400 -d30s http://localhost:8080/test2 -s post.lua
 Running 30s test @ http://localhost:8080/test2
@@ -64,10 +36,12 @@ Transfer/sec:      1.37MB
 
 release compile
 
-swift build -c release -Xswiftc -static-stdlib
-
 ```
-performance-test/compare/performance-test-go bosh$  wrk -t20 -c400 -d30s http://localhost:8080/test2 -s post.lua
+bash$ swift build -c release -Xswiftc -static-stdlib
+```
+run kitura 1.7.9
+```
+bash$  wrk -t20 -c400 -d30s http://localhost:8080/test2 -s post.lua
 Running 30s test @ http://localhost:8080/test2
   20 threads and 400 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
@@ -78,13 +52,27 @@ Running 30s test @ http://localhost:8080/test2
 Requests/sec:  18592.11
 Transfer/sec:      2.32MB
 ```
-4 instance double ca 1118972
+go handles 40,84% more requests then kitura 1.7.9
+this could be solved with 4 instance double ca 1118972
 
-go handles 40,84% more requests
+run kitura 2.0
+```
+normansmacbook:performance-test norman$ wrk -t20 -c400 -d30s http://localhost:8080/test2 -s post.lua
+Running 30s test @ http://localhost:8080/test2
+  20 threads and 400 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    19.09ms    4.05ms  84.64ms   91.12%
+    Req/Sec     1.04k   134.69     1.97k    84.20%
+  619142 requests in 30.04s, 83.85MB read
+  Socket errors: connect 0, read 310, write 0, timeout 0
+Requests/sec:  20610.31
+Transfer/sec:      2.79MB
+```
+go handles 34,47% more requests then kitura 2.0.0
 
 golang standard single thread
 ```
-bash$ wrk -t20 -c400 -d30s http://localhost:8082/test2 -s post.lua
+performance-test/compare/performance-test-go bash$ wrk -t20 -c400 -d30s http://localhost:8082/test2 -s post.lua
 Running 30s test @ http://localhost:8082/test2
   20 threads and 400 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
@@ -112,16 +100,25 @@ Transfer/sec:    472.99KB
 go handles 91,04% more requests
 
 
-perfomance on Cloud Foundry
+## Perfomance on Cloud Foundry
 
 ### before
-cf push performance-test -m 32M -i 5// swift app
-cd compare/performance-test-go cf push performance-test-go -m 256M // go app
+at first push the 2 performance-test apps.
+** // swift app
+```
+cf push performance-test -m 32M -i 3
+```
 
-### go
-wrk -t20 -c400 -d30s https://performance-test-go.eu-de.mybluemix.net/test2 -s post.lua
+** // go app
+```
+(cd compare/performance-test-go; cf push performance-test-go -m 256M )
+```
 
+### go performance test
+```
 bash$ wrk -t20 -c400 -d30s https://performance-test-go.eu-de.mybluemix.net/test2 -s post.lua
+```
+```
 Running 30s test @ https://performance-test-go.eu-de.mybluemix.net/test2
   20 threads and 400 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
@@ -131,12 +128,16 @@ Running 30s test @ https://performance-test-go.eu-de.mybluemix.net/test2
   Socket errors: connect 0, read 0, write 0, timeout 2
 Requests/sec:   2278.76
 Transfer/sec:    531.58KB
+```
 
-### swift
-kitura 2 wit h5 instances
+### swift performance test
 
-wrk -t20 -c400 -d30s https://performance-test.eu-de.mybluemix.net/test2 -s post.lua
+kitura 2 with 5 instances and 160 Mb RAM
+```
+bash$ wrk -t20 -c400 -d30s https://performance-test.eu-de.mybluemix.net/test2 -s post.lua
+```
 
+```
 Running 30s test @ https://performance-test.eu-de.mybluemix.net/test2
   20 threads and 400 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
@@ -146,8 +147,10 @@ Running 30s test @ https://performance-test.eu-de.mybluemix.net/test2
   Socket errors: connect 0, read 0, write 0, timeout 7
 Requests/sec:   5085.52
 Transfer/sec:      0.98MB
+```
 
-with 1 instances
+with 1 instances and 32Mb RAM
+```
 Running 30s test @ https://performance-test.eu-de.mybluemix.net/test2
   20 threads and 400 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
@@ -156,7 +159,10 @@ Running 30s test @ https://performance-test.eu-de.mybluemix.net/test2
   36054 requests in 30.09s, 6.94MB read
 Requests/sec:   1198.18
 Transfer/sec:    236.31KB
+```
 
+with 3 instances and 96Mb RAM
+```
 name                  requested state   instances   memory   disk   urls
 performance-test      started           3/3         32M      1G     performance-test.eu-de.mybluemix.net
 performance-test-go   started           1/1         256M     1G     performance-test-go.eu-de.mybluemix.net
@@ -169,3 +175,4 @@ Running 30s test @ https://performance-test.eu-de.mybluemix.net/test2
   92411 requests in 30.10s, 17.79MB read
 Requests/sec:   3070.44
 Transfer/sec:    605.41KB
+``
