@@ -103,13 +103,13 @@ go handles 91,04% more requests
 ## Perfomance on Cloud Foundry
 
 ### before
-at first push the 2 performance-test apps.
-** // swift app
+at first push the 2 performance-test apps.  
+* swift app
 ```
 cf push performance-test -m 32M -i 3
 ```
 
-** // go app
+* go app
 ```
 (cd compare/performance-test-go; cf push performance-test-go -m 256M )
 ```
@@ -131,7 +131,6 @@ Transfer/sec:    531.58KB
 ```
 
 ### swift performance test
-
 kitura 2 with 5 instances and 160 Mb RAM
 ```
 bash$ wrk -t20 -c400 -d30s https://performance-test.eu-de.mybluemix.net/test2 -s post.lua
