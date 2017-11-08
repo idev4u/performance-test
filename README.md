@@ -67,7 +67,7 @@ release compile
 swift build -c release -Xswiftc -static-stdlib
 
 ```
-normansmacbook:performance-test norman$  wrk -t20 -c400 -d30s http://localhost:8080/test2 -s post.lua
+performance-test/compare/performance-test-go bosh$  wrk -t20 -c400 -d30s http://localhost:8080/test2 -s post.lua
 Running 30s test @ http://localhost:8080/test2
   20 threads and 400 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
@@ -121,7 +121,7 @@ cd compare/performance-test-go cf push performance-test-go -m 256M // go app
 ### go
 wrk -t20 -c400 -d30s https://performance-test-go.eu-de.mybluemix.net/test2 -s post.lua
 
-norman$ wrk -t20 -c400 -d30s https://performance-test-go.eu-de.mybluemix.net/test2 -s post.lua
+bash$ wrk -t20 -c400 -d30s https://performance-test-go.eu-de.mybluemix.net/test2 -s post.lua
 Running 30s test @ https://performance-test-go.eu-de.mybluemix.net/test2
   20 threads and 400 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
@@ -160,7 +160,7 @@ Transfer/sec:    236.31KB
 name                  requested state   instances   memory   disk   urls
 performance-test      started           3/3         32M      1G     performance-test.eu-de.mybluemix.net
 performance-test-go   started           1/1         256M     1G     performance-test-go.eu-de.mybluemix.net
-normansmacbook:performance-test norman$ wrk -t20 -c400 -d30s https://performance-test.eu-de.mybluemix.net/test2 -s post.lua
+performance-test bash$ wrk -t20 -c400 -d30s https://performance-test.eu-de.mybluemix.net/test2 -s post.lua
 Running 30s test @ https://performance-test.eu-de.mybluemix.net/test2
   20 threads and 400 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
@@ -169,4 +169,3 @@ Running 30s test @ https://performance-test.eu-de.mybluemix.net/test2
   92411 requests in 30.10s, 17.79MB read
 Requests/sec:   3070.44
 Transfer/sec:    605.41KB
-normansmacbook:performance-test norman$
