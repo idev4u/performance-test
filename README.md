@@ -115,11 +115,58 @@ go handles 91,04% more requests
 perfomance on Cloud Foundry
 
 ### before
-cf push performance-test -m 32M // swift app
+cf push performance-test -m 32M -i 5// swift app
 cd compare/performance-test-go cf push performance-test-go -m 256M // go app
 
-#go
+### go
 wrk -t20 -c400 -d30s https://performance-test-go.eu-de.mybluemix.net/test2 -s post.lua
 
-#swift
+norman$ wrk -t20 -c400 -d30s https://performance-test-go.eu-de.mybluemix.net/test2 -s post.lua
+Running 30s test @ https://performance-test-go.eu-de.mybluemix.net/test2
+  20 threads and 400 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   194.99ms  161.73ms   1.95s    86.53%
+    Req/Sec   117.55     56.19   390.00     70.13%
+  68570 requests in 30.09s, 15.62MB read
+  Socket errors: connect 0, read 0, write 0, timeout 2
+Requests/sec:   2278.76
+Transfer/sec:    531.58KB
+
+### swift
+kitura 2 wit h5 instances
+
 wrk -t20 -c400 -d30s https://performance-test.eu-de.mybluemix.net/test2 -s post.lua
+
+Running 30s test @ https://performance-test.eu-de.mybluemix.net/test2
+  20 threads and 400 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   110.86ms  159.47ms   1.94s    92.08%
+    Req/Sec   259.21     89.28   474.00     64.71%
+  153092 requests in 30.10s, 29.46MB read
+  Socket errors: connect 0, read 0, write 0, timeout 7
+Requests/sec:   5085.52
+Transfer/sec:      0.98MB
+
+with 1 instances
+Running 30s test @ https://performance-test.eu-de.mybluemix.net/test2
+  20 threads and 400 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   332.26ms  151.53ms   1.69s    75.01%
+    Req/Sec    61.05     28.01   171.00     64.40%
+  36054 requests in 30.09s, 6.94MB read
+Requests/sec:   1198.18
+Transfer/sec:    236.31KB
+
+name                  requested state   instances   memory   disk   urls
+performance-test      started           3/3         32M      1G     performance-test.eu-de.mybluemix.net
+performance-test-go   started           1/1         256M     1G     performance-test-go.eu-de.mybluemix.net
+normansmacbook:performance-test norman$ wrk -t20 -c400 -d30s https://performance-test.eu-de.mybluemix.net/test2 -s post.lua
+Running 30s test @ https://performance-test.eu-de.mybluemix.net/test2
+  20 threads and 400 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   169.63ms  184.55ms   1.74s    87.33%
+    Req/Sec   158.22     71.64   420.00     66.62%
+  92411 requests in 30.10s, 17.79MB read
+Requests/sec:   3070.44
+Transfer/sec:    605.41KB
+normansmacbook:performance-test norman$

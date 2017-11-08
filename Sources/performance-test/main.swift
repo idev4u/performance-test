@@ -2,43 +2,22 @@ import Kitura
 import KituraNet
 import Foundation
 
-struct PayloadModel {
+struct PayloadModel : Codable {
     var name: String
 }
 
 let endpoint = Router()
-
 endpoint.all(middleware: BodyParser())
-endpoint.post("/test") { request, response, next in
-    print(request.body.debugDescription)
-    guard let parsedBody = request.body else {
-        next()
-        print("no json")
-        return
-    }
-    
-    switch(parsedBody) {
-    case .json(let jsonBody):
-        let name = jsonBody["name"].string ?? ""
-        try response.send("Hello \(name)").end()
-    default:
-        break
-    }
-    next()
-    
-}
-
 endpoint.post("/test2") { (request, response, next)  in
-    guard let payload = request.body?.asJSON else {
+    guard let payload = request.body else {
         next()
         print("no json")
         return
     }
-    let result = payload.dictionary?["name"]
-    print(result?.rawString() ?? "")
     
-//    try response.send(status: HTTPStatusCode.OK).end()
+    print(payload.asJSON?.description as Any)
     try response.send("Hello Swift World!").end()
+//    try response.send("Hello Swift World!").status(HTTPStatusCode.OK).end()
     next()
 }
 
