@@ -174,4 +174,4 @@ Running 30s test @ https://performance-test.eu-de.mybluemix.net/test2
   92411 requests in 30.10s, 17.79MB read
 Requests/sec:   3070.44
 Transfer/sec:    605.41KB
-``
+```
